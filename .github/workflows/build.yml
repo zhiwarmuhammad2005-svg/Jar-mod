@@ -1,0 +1,19 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q blackpill-fabric-26.3-source.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - run: cd blackpill && chmod +x gradlew && ./gradlew build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blackpill-jar
+          path: |
+            blackpill/build/libs/*.jar
+            !blackpill/build/libs/*-sources.jar
